@@ -7,3 +7,5 @@ docker rm saas-sql
 dotnet tool uninstall dotnet-ef
 docker rmi saas
 
+docker network rm saas-net
+
