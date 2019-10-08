@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -32,7 +31,7 @@ namespace Screenshots.Queries
             return new GetScreenshotResult
             {
                 Bytes = screenshot.Bytes,
-                MimeType = "image/jpeg",
+                MimeType = "image/png",
             };
         }
     }

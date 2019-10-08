@@ -1,20 +1,23 @@
+using System;
+using System.Drawing.Imaging;
 using System.Threading;
 using System.Threading.Tasks;
-using CoreHtmlToImage;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Screenshots.Commands
 {
     public class TakeScreenshotsCommandHandler : AsyncRequestHandler<TakeScreenshotsCommand>
     {
+        private readonly ILogger<TakeScreenshotsCommandHandler> _logger;
         private readonly ScreenshotsAsAServiceContext _dbContext;
-        private readonly HtmlConverter _converter;
  
         public TakeScreenshotsCommandHandler(
-            ScreenshotsAsAServiceContext dbContext, HtmlConverter converter)
+            ILogger<TakeScreenshotsCommandHandler> logger,
+            ScreenshotsAsAServiceContext dbContext)
         {
+            _logger = logger;
             _dbContext = dbContext;
-            _converter = converter;
         }
 
         protected override async Task Handle(
@@ -22,25 +25,23 @@ namespace Screenshots.Commands
         {
             foreach(var url in command.Urls)
             {
-                var screenshot = GetNewScreenshot(url);
-                if (screenshot != null)
-                {
-                    await InsertOrUpdateAsync(screenshot);
-                }
+                var screenshot = CaptureScreenshot(url);
+                await InsertOrUpdateAsync(screenshot);
             }
             await _dbContext.SaveChangesAsync();
         }
 
-        private Screenshot GetNewScreenshot(string url)
+        private Screenshot CaptureScreenshot(string url)
         {
             byte[] bytes;
             try 
             {
-                bytes = _converter.FromUrl(url, 1920, ImageFormat.Jpg);
+                bytes = WkhtmlDriver.Capture($" {url}", ImageFormat.Png);   
             }
-            catch 
+            catch (Exception exception)
             {
-                return null;
+                _logger.LogError(exception, $"Failed to capture '{url}' screenshot!");
+                throw;
             }
             return new Screenshot { Url = url, Bytes = bytes };
         }

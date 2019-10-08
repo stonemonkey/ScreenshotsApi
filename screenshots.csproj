@@ -8,9 +8,21 @@
 
   <ItemGroup>
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="Wkhtmltopdf\Linux\wkhtmltopdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Wkhtmltopdf\Mac\wkhtmltopdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Wkhtmltopdf\Windows\wkhtmltopdf.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CoreHtmlToImage" Version="1.0.5" />
+    <PackageReference Include="IronPdf" Version="2019.7.0" />
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
@@ -23,6 +35,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
+    <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
+    <PackageReference Include="Wkhtmltopdf.NetCore" Version="3.0.1-preview" />
   </ItemGroup>
 
 </Project>

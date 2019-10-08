@@ -26,7 +26,7 @@ namespace Screenshots.Controllers
         /// <remarks>To take and save screenshot one needs first to POST the list of URLs.</remarks>
         /// <response code="200">OK.</response>
         /// <response code="400">The URL provided is invalid.</response>
-        /// <response code="404">No screenshot has been take yet.</response>
+        /// <response code="404">No screenshot found.</response>
         [HttpGet]
         public async Task<ActionResult> GetScreenshot([FromQuery] string url)
         {
@@ -61,7 +61,7 @@ namespace Screenshots.Controllers
             }
 
             await _mediator.Send(command);
-            return Ok(); // StatusCode(202);
+            return Ok();
         }
     }
 }
