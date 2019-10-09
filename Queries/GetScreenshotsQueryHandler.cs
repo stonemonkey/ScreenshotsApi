@@ -7,9 +7,9 @@ namespace Screenshots.Queries
 {
     public class GetScreenshotsQueryHandler : IRequestHandler<GetScreenshotQuery, GetScreenshotResult>
     {
-        private readonly ScreenshotsAsAServiceContext _dbContext;
+        private readonly SaaSContext _dbContext;
  
-        public GetScreenshotsQueryHandler(ScreenshotsAsAServiceContext dbContext)
+        public GetScreenshotsQueryHandler(SaaSContext dbContext)
         {
             _dbContext = dbContext;
         }

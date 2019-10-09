@@ -11,14 +11,13 @@ namespace Screenshots.Commands
     public class TakeScreenshotsCommandHandler : IRequestHandler<TakeScreenshotsCommand, TakeScreenshotsResult>
     {
         private readonly ILogger<TakeScreenshotsCommandHandler> _logger;
-        private readonly ScreenshotsAsAServiceContext _dbContext;
-
         private readonly HtmlConverter _htmlConverter;
+        private readonly SaaSContext _dbContext;
  
         public TakeScreenshotsCommandHandler(
             ILogger<TakeScreenshotsCommandHandler> logger,
-            ScreenshotsAsAServiceContext dbContext,
-            HtmlConverter htmlConverter)
+            HtmlConverter htmlConverter,
+            SaaSContext dbContext)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -50,8 +49,7 @@ namespace Screenshots.Commands
                 else
                     await InsertOrUpdateAsync(screenshot);
             }
-            await _dbContext.SaveChangesAsync();
-
+    
             return errors.ToArray();
         }
 
@@ -61,11 +59,11 @@ namespace Screenshots.Commands
             try 
             {
                 // I'm using here a small library (CoreHtmlToImage) for taking the screenshot. I'm not
-                // happy with it because  it's not working in linux. This is the reason I'm using windows
+                // happy with it because  it's not working in linux. This is the reason I'm trying to use windows
                 // containers to host the service. I tried couple of diffrent other libraries (e.g. IronPdf,
                 // wkhtmltoimage) for this matter and neither one worked out of the box in linux containers. 
                 // I spend some time trying fixing them unfortunately I run out of time. 
-                screenshot = new Screenshot { Url = url, Bytes = _htmlConverter.FromUrl(url) };
+                screenshot = new Screenshot { Url = url, Bytes = _htmlConverter.FromUrl(url, 1920, ImageFormat.Png, 100) };
             }
             catch (Exception exception)
             {
@@ -80,7 +78,9 @@ namespace Screenshots.Commands
             if (existingScreenshot == null)
                 await _dbContext.AddAsync(screenshot);
             else
-               _dbContext.Entry(existingScreenshot).CurrentValues.SetValues(screenshot);
+                _dbContext.Entry(existingScreenshot).CurrentValues.SetValues(screenshot);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

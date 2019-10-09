@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
-public class ScreenshotsAsAServiceContext : DbContext
+public class SaaSContext : DbContext
 {
-    public ScreenshotsAsAServiceContext(DbContextOptions<ScreenshotsAsAServiceContext> options)
+    public SaaSContext(DbContextOptions<SaaSContext> options)
         : base(options) { }
 
     public DbSet<Screenshot> Screenshots { get; set; }    

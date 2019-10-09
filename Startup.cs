@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Screenshots;
 
 namespace screenshots
 {
@@ -27,7 +26,7 @@ namespace screenshots
         {
             services.AddControllers();
             services.AddMediatR(GetType().Assembly);
-            services.AddDbContext<ScreenshotsAsAServiceContext>(options => 
+            services.AddDbContext<SaaSContext>(options => 
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"], builder =>
                 {
                     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
