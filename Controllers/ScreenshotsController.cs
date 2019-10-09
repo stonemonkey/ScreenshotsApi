@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -52,7 +53,7 @@ namespace Screenshots.Controllers
         /// <response code="200">OK.</response>
         /// <response code="400">The URLs list provided is invalid (empty).</response>
         [HttpPost]
-        public async Task<ActionResult> TakeScreenshots([FromBody] string[] urls)
+        public async Task<ActionResult<TakeScreenshotsResult>> TakeScreenshots([FromBody] string[] urls)
         {
             var command = new TakeScreenshotsCommand{ Urls = urls };
             if (!command.IsValid())
@@ -60,8 +61,10 @@ namespace Screenshots.Controllers
                 return BadRequest();
             }
 
-            await _mediator.Send(command);
-            return Ok();
+            // TODO: In order to accept large amount of screenshot requests maybe fire and forget here and 
+            // add a GET /status action on the controller to be able to track when the screenshot. 
+            var result = await _mediator.Send(command);
+            return Ok(result); // not very nice to return errors with 200, but for the moment does the job  
         }
     }
 }

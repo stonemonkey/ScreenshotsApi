@@ -14,15 +14,12 @@ namespace Screenshots.Queries
             _dbContext = dbContext;
         }
 
-        public async Task<GetScreenshotResult> Handle(
-            GetScreenshotQuery query, CancellationToken cancellationToken)
+        public async Task<GetScreenshotResult> Handle(GetScreenshotQuery query, CancellationToken cancellationToken)
         {
-            var screenshot = await _dbContext.Screenshots
-                .SingleOrDefaultAsync(x => x.Url == query.Url);
+            var screenshot = await _dbContext.Screenshots.SingleOrDefaultAsync(x => x.Url == query.Url);
             if (screenshot is null)
-            {
                 return null;
-            }
+
             return CreateQueryResult(screenshot);
         }
 

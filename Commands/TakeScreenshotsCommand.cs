@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Screenshots.Commands
 {
-    public class TakeScreenshotsCommand : IRequest
+    public class TakeScreenshotsCommand : IRequest<TakeScreenshotsResult>
     {
         public string[] Urls { get; set; }
 

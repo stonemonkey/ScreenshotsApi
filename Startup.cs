@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using CoreHtmlToImage;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,13 +32,13 @@ namespace screenshots
                 {
                     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
                 }));
-            services.AddWkhtmltopdf();
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Screenshots HTTP API", Version = "v1" });
                 var filePath = Path.Combine(System.AppContext.BaseDirectory, "screenshots.xml");
                 options.IncludeXmlComments(filePath);
             });
+            services.AddScoped<HtmlConverter, HtmlConverter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
